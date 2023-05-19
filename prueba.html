@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Consulta de Estudiantes</title>
+  <script>
+    function buscarEstudiante() {
+      var identificacion = document.getElementById('identificacion').value;
+     var estudiantes = {
+  "1020421775": {
+    "nombre": "Emilin Ortega Montiel",
+    "usuario": "ti1020421775",
+    "contrasena": "ti1020421775"
+  },
+  "1069480001": {
+    "nombre": "Jesus Alejandro Alvarez Ortiz",
+    "usuario": "ti1069480001",
+    "contrasena": "ti1069480001"
+  },
+  "1070388899": {
+    "nombre": "Ronald Santiago Bohorquez Ramirez",
+    "usuario": "ti1070388899",
+    "contrasena": "ti1070388899"
+  },
+  "1063357117": {
+    "nombre": "Derlis Contreras Polo",
+    "usuario": "ti1063357117",
+    "contrasena": "ti1063357117"
+  },
+  "1138076365": {
+    "nombre": "Maria Cristina Lara Sierra",
+    "usuario": "ti1138076365",
+    "contrasena": "ti1138076365"
+  },
+  "1235241248": {
+    "nombre": "Shairimar De Los Angeles Duarte Gonzalez",
+    "usuario": "ti1235241248",
+    "contrasena": "ti1235241248"
+  },
+  "1133829117": {
+    "nombre": "Luis Angel Cordon Peña",
+    "usuario": "ti1133829117",
+    "contrasena": "ti1133829117"
+  },
+  "1063788949": {
+    "nombre": "Jhojan Daniel Londoño Montes",
+    "usuario": "ti1063788949",
+    "contrasena": "ti1063788949"
+  },
+  "1063360389": {
+    "nombre": "Samuel Romero Yances",
+    "usuario": "ti1063360389",
+    "contrasena": "ti1063360389"
+  },
+  "1045109055": {
+    "nombre": "Mariana Velez Restrepo",
+    "usuario": "ti1045109055",
+    "contrasena": "ti1045109055"
+  },
+  "1063355873": {
+    "nombre": "Mario Tufficth Nader Galvis",
+    "usuario": "ti1063355873",
+    "contrasena": "ti1063355873"
+  },
+  "1029722343": {
+    "nombre": "Javier Andres Tafur Angulo",
+    "usuario": "ti1029722343",
+    "contrasena": "ti1029722343"
+  },
+  "1129805870": {
+    "nombre": "Angel Gabriel Ricardo Sanchez",
+    "usuario": "ti1129805870",
+    "contrasena": "ti1129805870"
+  },
+  "1063357258": {
+    "nombre": "Eliana Patricia Ruiz Montes",
+    "usuario": "ti1063357258",
+    "contrasena": "ti1063357258"
+  },
+  "1063358634": {
+    "nombre": "Taysy Tovar Macea",
+    "usuario": "ti1063358634",
+    "contrasena": "ti1063358634"
+  },
+  "1063789492": {
+    "nombre": "Yina Luz Suarez Sequeda",
+    "usuario": "ti1063789492",
+    "contrasena": "ti1063789492"
+  },
+  "1063788780": {
+    "nombre": "Veronica Hernandez Herazo",
+    "usuario": "ti1063788780",
+    "contrasena": "ti1063788780"
+  },
+  "1063788037": {
+    "nombre": "Sebastian Hernandez Gomez",
+    "usuario": "ti1063788037",
+    "contrasena": "ti1063788037"
+  },
+  "1063359374": {
+    "nombre": "Maria Fernanda Nader Galvis",
+    "usuario": "ti1063359374",
+    "contrasena": "ti1063359374"
+  },
+  "1063789168": {
+    "nombre": "Cherith Isabel Huerta Aparicio",
+    "usuario": "ti1063789168",
+    "contrasena": "ti1063789168"
+  },
+  "1063789073": {
+    "nombre": "Andry Patricia Montes Argumedo",
+    "usuario": "ti1063789073",
+    "contrasena": "ti1063789073"
+  },
+  "1063789327": {
+    "nombre": "Dayana Sierra Diaz",
+    "usuario": "ti1063789327",
+    "contrasena": "ti1063789327"
+  },
+  "1063787939": {
+    "nombre": "Juan David Carpio Montalvo",
+    "usuario": "ti1063787939",
+    "contrasena": "ti1063787939"
+  },
+  "1063788959": {
+    "nombre": "Luis Fernelis Sierra Lugo",
+    "usuario": "ti1063788959",
+    "contrasena": "ti1063788959"
+  },
+  "1063788602": {
+    "nombre": "Valeria Sanchez Polo",
+    "usuario": "ti1063788602",
+    "contrasena": "ti1063788602"
+  },
+  "1063788440": {
+    "nombre": "Mariana Perez Aparicio",
+    "usuario": "ti1063788440",
+    "contrasena": "ti1063788440"
+  },
+  "1063358536": {
+    "nombre": "Saivis Yaneth Lopez Oyola",
+    "usuario": "ti1063358536",
+    "contrasena": "ti1063358536"
+  },
+  "1063358924": {
+    "nombre": "Camilo Alfonso De La Ossa Mestra",
+    "usuario": "ti1063358924",
+    "contrasena": "ti1063358924"
+  },
+  "1063357181": {
+    "nombre": "Cristian David Altamiranda Arroyo",
+    "usuario": "ti1063357181",
+    "contrasena": "ti1063357181"
+  },
+ "1063788864": {
+    "nombre": "Yeiner Ayala Arias",
+    "usuario": "ti1063788864",
+    "contrasena": "ti1063788864"
+  },
+  "1026000922": {
+    "nombre": "Llasnery Holguin Ruiz",
+    "usuario": "ti1026000922",
+    "contrasena": "ti1026000922"
+  },
+  "1029721876": {
+    "nombre": "Jose Manuel Zarante Lopez",
+    "usuario": "ti1029721876",
+    "contrasena": "ti1029721876"
+  },
+  "1063360062": {
+    "nombre": "Cristian Salgado Alvarez",
+    "usuario": "ti1063360062",
+    "contrasena": "ti1063360062"
+  },
+  "1038099325": {
+    "nombre": "Juan Alberto Arcia Vega",
+    "usuario": "ti1038099325",
+    "contrasena": "ti1038099325"
+  },
+  "1063359659": {
+    "nombre": "Adrian Alberto Gomez Barrera",
+    "usuario": "ti1063359659",
+    "contrasena": "ti1063359659"
+  },
+  "1063788000": {
+    "nombre": "Nikole Villalba Hoyos",
+    "usuario": "ti1063788000",
+    "contrasena": "ti1063788000"
+  },
+  "1063359981": {
+    "nombre": "Anderson Valencia Saez",
+    "usuario": "ti1063359981",
+    "contrasena": "ti1063359981"
+  },
+  "1032253159": {
+    "nombre": "Yaris Dayana Zabala Romero",
+    "usuario": "ti1032253159",
+    "contrasena": "ti1032253159"
+  },
+  "1063787806": {
+    "nombre": "Keinner Lozano Suarez",
+    "usuario": "ti1063787806",
+    "contrasena": "ti1063787806"
+  },
+  "N42605490860": {
+    "nombre": "Yamileth Antonieta Herrera Nava",
+    "usuario": "nesn42605490860",
+    "contrasena": "nesn42605490860"
+  },
+  "1066733575": {
+    "nombre": "Esteban Alejandro Carmona Palencia",
+    "usuario": "ti1066733575",
+    "contrasena": "ti1066733575"
+  },
+  "1063357895": {
+    "nombre": "Melany Bello Gonzalez",
+    "usuario": "ti1063357895",
+    "contrasena": "ti1063357895"
+  },
+  "1063357896": {
+    "nombre": "Sara Sofia Bello Gonzalez",
+    "usuario": "ti1063357896",
+    "contrasena": "ti1063357896"
+  }
+  
+  };
+ 
+
+
+
+      var estudiante = estudiantes[identificacion];
+
+      if (estudiante) {
+        document.getElementById('resultado').innerHTML = "<b>Nombre:</b> " + estudiante.nombre + "<br><b>Usuario:</b> " + estudiante.usuario + "<br><b>Contraseña:</b> " + estudiante.contrasena;
+      } else {
+        document.getElementById('resultado').innerHTML = "No se encontró ningún estudiante con esa identificación.";
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Consulta de Estudiantes</h1>
+  <label>Ingrese su identificación:</label>
+  <input type="text" id="identificacion">
+  <button onclick="buscarEstudiante()">Buscar</button>
+  <div id="resultado"></div>
+</body>
+</html>
