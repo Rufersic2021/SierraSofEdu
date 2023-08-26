@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selección Aleatoria de Estudiantes</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #F6F6F6;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #FFF;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .students-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .student-card {
+      width: 180px;
+      margin: 10px;
+      padding: 20px;
+      background-color: #EFEFEF;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s, background-color 0.3s;
+      position: relative;
+    }
+
+    .student-card:hover {
+      transform: scale(1.05);
+    }
+
+    .student-card.selected {
+      background-color: #FFC107;
+      color: #FFF;
+      animation: spin 2s linear infinite, changeColor 0.5s ease-in-out;
+      transition: transform 1s;
+    }
+
+    .student-card.selected:hover {
+      background-color: #FFC107;
+    }
+
+    .student-card.selected::after {
+      content: "✨";
+      display: block;
+      font-size: 40px;
+      margin-top: 10px;
+    }
+
+    /* Nuevos estilos para la sección de notas */
+    #selectedParticipant {
+      display: flex;
+      align-items: center;
+    }
+
+    #noteSection {
+      display: none;
+      margin-top: 10px;
+    }
+
+    #noteInput {
+      flex: 1;
+    }
+
+    /* Estilos para el botón de ver notas y generar PDF */
+    #showNotesButton,
+    #generatePDFButton {
+      margin-top: 10px;
+    }
+
+    /* Animación de selección aleatoria */
+    @keyframes spin {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+      50% {
+        transform: rotate(180deg);
+      }
+    }
+
+    /* Cambio de color de fondo */
+    @keyframes changeColor {
+      0%, 100% {
+        background-color: #EFEFEF;
+      }
+      50% {
+        background-color: #FFC107;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Selección Aleatoria de Estudiantes</h1>
+    <div class="note-section">
+      <label for="participantNames">Nombres de Participantes (uno por línea):</label>
+      <textarea id="participantNames" rows="6" placeholder="Nombre 1&#10;Nombre 2&#10;Nombre 3"></textarea>
+      <button class="button" onclick="generateCardsFromNames()">Generar Cartas</button>
+      <button class="button" id="randomSelectButton" onclick="selectRandom()" disabled>Selección Aleatoria</button>
+    </div>
+    <div id="selectedParticipant" style="display: none;">
+      <p>Participante seleccionado: <span id="participantName"></span></p>
+      <div id="noteSection">
+        <textarea id="noteInput" rows="4" placeholder="Agregar nota"></textarea>
+        <button class="button" id="addNoteButton" onclick="addNote()">Agregar Nota</button>
+      </div>
+    </div>
+    <div class="students-list" id="studentsList">
+      <!-- Aquí se generarán las cartas de los estudiantes -->
+    </div>
+    <div id="notesSection"></div>
+    <button class="button" id="showNotesButton" onclick="showNotes()" style="display: none;">Ver Notas</button>
+    <button class="button" id="generatePDFButton" onclick="generatePDF()" style="display: none;">Generar PDF</button>
+  </div>
+
+  <script>
+    const notes = new Map();
+    let isNoteAdded = false;
+
+    function generateCardsFromNames() {
+      const participantNamesTextArea = document.getElementById('participantNames');
+      const participantNames = participantNamesTextArea.value.trim().split('\n');
+      const studentsList = document.getElementById('studentsList');
+      studentsList.innerHTML = '';
+
+      participantNames.forEach((name, index) => {
+        const studentCard = document.createElement('div');
+        studentCard.className = 'student-card';
+        studentCard.innerHTML = `
+          <h2>${name}</h2>
+          <button class="remove-btn" onclick="removeCard(this)">Eliminar</button>
+        `;
+        studentsList.appendChild(studentCard);
+      });
+
+      const randomSelectButton = document.getElementById('randomSelectButton');
+      randomSelectButton.disabled = participantNames.length < 2;
+      document.getElementById('selectedParticipant').style.display = 'none';
+      document.getElementById('noteSection').style.display = 'none';
+      document.getElementById('addNoteButton').style.display = 'none';
+      document.getElementById('showNotesButton').style.display = 'none';
+      document.getElementById('generatePDFButton').style.display = 'none';
+      isNoteAdded = false;
+    }
+
+    function scrollToSelectedCard(selectedCard) {
+      const cardPosition = selectedCard.getBoundingClientRect().top + window.scrollY;
+      const yOffset = -50;
+
+      window.scrollTo({
+        top: cardPosition + yOffset,
+        behavior: 'smooth'
+      });
+
+      selectedCard.classList.add('selected');
+
+      setTimeout(() => {
+        selectedCard.classList.remove('selected');
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }, 2000);
+    }
+
+    function selectRandom() {
+      const studentCards = document.querySelectorAll('.student-card');
+      if (studentCards.length >= 2) {
+        const randomIndex = Math.floor(Math.random() * studentCards.length);
+        const selectedCard = studentCards[randomIndex];
+        
+        const participantName = selectedCard.querySelector('h2').textContent;
+        document.getElementById('participantName').textContent = participantName;
+        document.getElementById('selectedParticipant').style.display = 'block';
+        document.getElementById('noteSection').style.display = 'block';
+        document.getElementById('addNoteButton').style.display = 'block';
+        document.getElementById('showNotesButton').style.display = 'none';
+        document.getElementById('generatePDFButton').style.display = 'none';
+        isNoteAdded = false;
+
+        scrollToSelectedCard(selectedCard);
+      } else {
+        alert("Debe haber al menos 2 cartas generadas para hacer una selección aleatoria.");
+      }
+    }
+
+    function addNote() {
+      const noteInput = document.getElementById('noteInput').value;
+      if (noteInput.trim() !== '') {
+        const currentDate = new Date();
+        const note = {
+          content: noteInput,
+          time: currentDate.getHours() + ':' + currentDate.getMinutes()
+        };
+
+        const selectedParticipant = document.getElementById('participantName').textContent;
+        notes.set(selectedParticipant, note);
+
+        document.getElementById('noteInput').value = '';
+        isNoteAdded = true;
+        document.getElementById('addNoteButton').style.display = 'none';
+        document.getElementById('noteSection').style.display = 'none';
+        document.getElementById('showNotesButton').style.display = 'block';
+        document.getElementById('generatePDFButton').style.display = 'none';
+      }
+    }
+
+    function showNotes() {
+      const notesSection = document.getElementById('notesSection');
+      notesSection.innerHTML = '';
+      if (notes.size > 0) {
+        const notesList = document.createElement('ul');
+        notes.forEach((note, participant) => {
+          const noteItem = document.createElement('li');
+          noteItem.textContent = `${participant}: ${note.content} (Hora: ${note.time})`;
+          notesList.appendChild(noteItem);
+        });
+        notesSection.appendChild(notesList);
+        document.getElementById('generatePDFButton').style.display = 'block';
+      } else {
+        notesSection.textContent = 'No hay notas disponibles.';
+      }
+    }
+
+    function generatePDF() {
+      if (notes.size > 0) {
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString();
+        const docDefinition = {
+          content: [
+            { text: 'Notas de Estudiantes', style: 'header' },
+            { text: `Fecha: ${formattedDate}`, style: 'subheader' },
+            '\n\n',
+            ...Array.from(notes.entries()).map(([participant, note], index) => ({
+              text: `${index + 1}. ${participant}: ${note.content} (Hora: ${note.time})`
+            }))
+          ],
+          styles: {
+            header: {
+              fontSize: 18,
+              bold: true
+            },
+            subheader: {
+              fontSize: 14,
+              bold: true,
+              margin: [0, 0, 0, 10]
+            }
+          }
+        };
+
+        pdfMake.createPdf(docDefinition).open();
+      } else {
+        alert("No hay notas disponibles para generar el PDF.");
+      }
+    }
+
+    function removeCard(button) {
+      const card = button.parentElement;
+      card.remove();
+      const studentCards = document.querySelectorAll('.student-card');
+      document.getElementById('randomSelectButton').disabled = studentCards.length < 2;
+    }
+
+  </script>
+</body>
+</html>

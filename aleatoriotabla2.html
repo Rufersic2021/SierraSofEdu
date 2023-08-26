@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tabla de Alumnos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    table {
+      width: 600px;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #333;
+      color: #fff;
+    }
+
+    #addBtn, #selectBtn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #selectedStudent {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+      display: none;
+    }
+
+    @keyframes colorAnimation {
+      0% {
+        background-color: #ff0000;
+      }
+      25% {
+        background-color: #00ff00;
+      }
+      50% {
+        background-color: #0000ff;
+      }
+      75% {
+        background-color: #ffff00;
+      }
+      100% {
+        background-color: #ff00ff;
+      }
+    }
+
+    @keyframes moveAnimation {
+      0% {
+        transform: translate(0, 0);
+      }
+      25% {
+        transform: translate(-10px, -10px);
+      }
+      50% {
+        transform: translate(10px, -10px);
+      }
+      75% {
+        transform: translate(-10px, 10px);
+      }
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Tabla de Alumnos</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre Completo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="studentsTableBody"></tbody>
+  </table>
+  <textarea id="inputTextArea" placeholder="Ingrese los nombres completos, separados por saltos de línea"></textarea>
+  <button id="addBtn">Agregar Alumnos</button>
+  <button id="selectBtn">Seleccionar al Azar</button>
+  <h2 id="selectedStudent" style="display: none;"></h2>
+
+  <script>
+    window.onload = function() {
+      const addBtn = document.getElementById('addBtn');
+      const selectBtn = document.getElementById('selectBtn');
+      const studentsTableBody = document.getElementById('studentsTableBody');
+      const inputTextArea = document.getElementById('inputTextArea');
+      const selectedStudent = document.getElementById('selectedStudent');
+      let students = [];
+
+      addBtn.addEventListener('click', addStudents);
+      selectBtn.addEventListener('click', selectRandomStudent);
+
+      function addStudents() {
+        const inputText = inputTextArea.value;
+        const names = inputText.split('\n').map(name => name.trim());
+        students = students.concat(names.filter(name => name !== ''));
+        renderStudentsTable();
+      }
+
+      function renderStudentsTable() {
+        studentsTableBody.innerHTML = '';
+        students.forEach((student, index) => {
+          const row = document.createElement('tr');
+          const fullNameCell = document.createElement('td');
+          const actionsCell = document.createElement('td');
+          const deleteBtn = document.createElement('button');
+
+          fullNameCell.innerText = student;
+          deleteBtn.innerText = 'Eliminar';
+          deleteBtn.addEventListener('click', () => deleteStudent(index));
+
+          actionsCell.appendChild(deleteBtn);
+
+          row.appendChild(fullNameCell);
+          row.appendChild(actionsCell);
+          studentsTableBody.appendChild(row);
+        });
+      }
+
+      function deleteStudent(index) {
+        students.splice(index, 1);
+        renderStudentsTable();
+      }
+
+      function selectRandomStudent() {
+        if (students.length > 0) {
+          const selectedIndex = Math.floor(Math.random() * students.length);
+          const selectedName = students[selectedIndex];
+          studentsTableBody.style.animation = 'colorAnimation 2s ease-in-out';
+          setTimeout(() => {
+            selectedStudent.innerText = selectedName;
+            selectedStudent.style.display = 'block';
+            selectedStudent.style.animation = 'moveAnimation 2s ease-in-out';
+            setTimeout(() => {
+              selectedStudent.style.animation = '';
+              studentsTableBody.style.animation = '';
+            }, 2000);
+          }, 2000);
+        } else {
+          alert('Agrega alumnos a la tabla antes de seleccionar al azar.');
+        }
+      }
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tabla de Alumnos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      font-size: 16px;
+    }
+
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+      white-space: nowrap;
+    }
+
+    th {
+      background-color: #333;
+      color: #fff;
+    }
+
+    #selectBtn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #selectedStudentContainer {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #deleteSelectedBtn {
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    @keyframes colorAnimation {
+      0% {
+        background-color: #ff0000;
+      }
+      25% {
+        background-color: #00ff00;
+      }
+      50% {
+        background-color: #0000ff;
+      }
+      75% {
+        background-color: #ffff00;
+      }
+      100% {
+        background-color: #ff00ff;
+      }
+    }
+
+    @keyframes moveAnimation {
+      0% {
+        transform: translate(0, 0);
+      }
+      25% {
+        transform: translate(-10px, -10px);
+      }
+      50% {
+        transform: translate(10px, -10px);
+      }
+      75% {
+        transform: translate(-10px, 10px);
+      }
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre Completo</th>
+      </tr>
+    </thead>
+    <tbody id="studentsTableBody"></tbody>
+  </table>
+  <textarea id="inputTextArea" placeholder="Ingrese los nombres completos, separados por saltos de línea"></textarea>
+  <button id="addBtn">Agregar Alumnos</button>
+  <button id="selectBtn">Seleccionar al Azar</button>
+  
+  <div id="selectedStudentContainer">
+    <button id="deleteSelectedBtn">Eliminar</button>
+    <h2 id="selectedStudent" style="margin-top: 10px;"></h2>
+  </div>
+
+  <script>
+    window.onload = function() {
+      const addBtn = document.getElementById('addBtn');
+      const selectBtn = document.getElementById('selectBtn');
+      const studentsTableBody = document.getElementById('studentsTableBody');
+      const inputTextArea = document.getElementById('inputTextArea');
+      const selectedStudentContainer = document.getElementById('selectedStudentContainer');
+      const selectedStudent = document.getElementById('selectedStudent');
+      const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+      let students = [];
+
+      addBtn.addEventListener('click', addStudents);
+      selectBtn.addEventListener('click', selectRandomStudent);
+      deleteSelectedBtn.addEventListener('click', deleteSelectedStudent);
+
+      function addStudents() {
+        const inputText = inputTextArea.value;
+        const names = inputText.split('\n').map(name => name.trim());
+        students = students.concat(names.filter(name => name !== ''));
+        renderStudentsTable();
+      }
+
+      function selectRandomStudent() {
+        if (students.length > 0) {
+          const selectedIndex = Math.floor(Math.random() * students.length);
+          const selectedName = students[selectedIndex];
+          const shouldDelete = confirm(`Estudiante seleccionado: ${selectedName}\n¿Deseas eliminarlo?`);
+
+          if (shouldDelete) {
+            students.splice(selectedIndex, 1);
+            renderStudentsTable();
+            selectedStudentContainer.style.display = 'none';
+          } else {
+            selectedStudentContainer.style.display = 'none';
+          }
+        } else {
+          alert('Agrega alumnos a la tabla antes de seleccionar al azar.');
+        }
+      }
+
+      function renderStudentsTable() {
+        studentsTableBody.innerHTML = '';
+        students.forEach((student, index) => {
+          const row = document.createElement('tr');
+          const fullNameCell = document.createElement('td');
+          const actionsCell = document.createElement('td');
+          const deleteBtn = document.createElement('button');
+
+          fullNameCell.innerText = student;
+          deleteBtn.innerText = 'Eliminar';
+          deleteBtn.addEventListener('click', () => deleteStudent(index));
+
+          actionsCell.appendChild(deleteBtn);
+
+          row.appendChild(fullNameCell);
+          row.appendChild(actionsCell);
+          studentsTableBody.appendChild(row);
+        });
+      }
+
+      function deleteStudent(index) {
+        students.splice(index, 1);
+        renderStudentsTable();
+      }
+    };
+  </script>
+</body>
+</html>
